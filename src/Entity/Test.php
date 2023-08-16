@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\TestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
@@ -16,26 +15,15 @@ class Test
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $datetime = null;
+    #[ORM\ManyToOne(inversedBy: 'tests')]
+    private ?Lesson $lesson = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $topic = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Subject $subject = null;
+    #[ORM\Column]
+    private ?int $weight = null;
 
     #[ORM\ManyToOne(inversedBy: 'tests')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Teacher $teacher = null;
-
-    #[ORM\ManyToOne(inversedBy: 'tests')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Course $course = null;
+    private ?User $teacher = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Grade::class, orphanRemoval: true)]
     private Collection $grades;
@@ -50,74 +38,38 @@ class Test
         return $this->id;
     }
 
-    public function getDatetime(): ?\DateTimeInterface
+    public function getLesson(): ?Lesson
     {
-        return $this->datetime;
+        return $this->lesson;
     }
 
-    public function setDatetime(\DateTimeInterface $datetime): static
+    public function setLesson(?Lesson $lesson): static
     {
-        $this->datetime = $datetime;
+        $this->lesson = $lesson;
 
         return $this;
     }
 
-    public function getTopic(): ?string
+    public function getWeight(): ?int
     {
-        return $this->topic;
+        return $this->weight;
     }
 
-    public function setTopic(string $topic): static
+    public function setWeight(int $weight): static
     {
-        $this->topic = $topic;
+        $this->weight = $weight;
 
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getSubject(): ?Subject
-    {
-        return $this->subject;
-    }
-
-    public function setSubject(?Subject $subject): static
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    public function getTeacher(): ?Teacher
+    public function getTeacher(): ?User
     {
         return $this->teacher;
     }
 
-    public function setTeacher(?Teacher $teacher): static
+    public function setTeacher(?User $teacher): static
     {
         $this->teacher = $teacher;
-
-        return $this;
-    }
-
-    public function getCourse(): ?Course
-    {
-        return $this->course;
-    }
-
-    public function setCourse(?Course $course): static
-    {
-        $this->course = $course;
 
         return $this;
     }

@@ -17,22 +17,14 @@ class Grade
     #[ORM\Column]
     private ?float $value = null;
 
-    #[ORM\Column]
-    private ?int $weight = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $assign_date = null;
+    private ?\DateTimeInterface $issue_datetime = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $change_date = null;
+    private ?\DateTimeInterface $change_datetime = null;
 
     #[ORM\ManyToOne(inversedBy: 'grades')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Student $student = null;
-
-    #[ORM\ManyToOne(inversedBy: 'grades')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Teacher $teacher = null;
+    private ?User $student = null;
 
     #[ORM\ManyToOne(inversedBy: 'grades')]
     #[ORM\JoinColumn(nullable: false)]
@@ -55,62 +47,38 @@ class Grade
         return $this;
     }
 
-    public function getWeight(): ?int
+    public function getIssueDatetime(): ?\DateTimeInterface
     {
-        return $this->weight;
+        return $this->issue_datetime;
     }
 
-    public function setWeight(int $weight): static
+    public function setIssueDatetime(\DateTimeInterface $issue_datetime): static
     {
-        $this->weight = $weight;
+        $this->issue_datetime = $issue_datetime;
 
         return $this;
     }
 
-    public function getAssignDate(): ?\DateTimeInterface
+    public function getChangeDatetime(): ?\DateTimeInterface
     {
-        return $this->assign_date;
+        return $this->change_datetime;
     }
 
-    public function setAssignDate(\DateTimeInterface $assign_date): static
+    public function setChangeDatetime(?\DateTimeInterface $change_datetime): static
     {
-        $this->assign_date = $assign_date;
+        $this->change_datetime = $change_datetime;
 
         return $this;
     }
 
-    public function getChangeDate(): ?\DateTimeInterface
-    {
-        return $this->change_date;
-    }
-
-    public function setChangeDate(?\DateTimeInterface $change_date): static
-    {
-        $this->change_date = $change_date;
-
-        return $this;
-    }
-
-    public function getStudent(): ?Student
+    public function getStudent(): ?User
     {
         return $this->student;
     }
 
-    public function setStudent(?Student $student): static
+    public function setStudent(?User $student): static
     {
         $this->student = $student;
-
-        return $this;
-    }
-
-    public function getTeacher(): ?Teacher
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(?Teacher $teacher): static
-    {
-        $this->teacher = $teacher;
 
         return $this;
     }
