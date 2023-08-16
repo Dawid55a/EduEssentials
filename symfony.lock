@@ -239,6 +239,21 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/ux-live-component": {
+        "version": "2.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.6",
+            "ref": "73e69baf18f47740d6f58688c5464b10cdacae06"
+        },
+        "files": [
+            "config/routes/ux_live_component.yaml"
+        ]
+    },
+    "symfony/ux-twig-component": {
+        "version": "v2.10.0"
+    },
     "symfony/validator": {
         "version": "6.0",
         "recipe": {
@@ -294,6 +309,9 @@
             "package.json",
             "webpack.config.js"
         ]
+    },
+    "tales-from-a-dev/flowbite-bundle": {
+        "version": "v0.2.5"
     },
     "twig/extra-bundle": {
         "version": "v3.7.0"
