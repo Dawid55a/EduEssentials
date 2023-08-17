@@ -1,0 +1,27 @@
+<div
+        {{ attributes }}
+>
+    {{ form_start(form, {
+        attr: {
+            'novalidate': true,
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|saveRegistration',
+        }
+    }) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.first_name) }}
+    {{ form_row(form.last_name) }}
+    {{ form_row(form.phone_number) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.dateOfBirth) }}
+    {{ form_row(form.password) }}
+    {{ form_row(form.terms) }}
+
+
+    {{ form_rest(form) }}
+    <button type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        Submit
+    </button>
+    {{ form_end(form) }}
+</div>
