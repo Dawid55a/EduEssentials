@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -25,6 +26,17 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('role', ChoiceType::class, [
+                'choices' => [
+                    'Student' => 'ROLE_STUDENT',
+                    'Teacher' => 'ROLE_TEACHER',
+                ],
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank(message: 'Please select a role!'),
+                ],
+                'data' => 'ROLE_STUDENT',
+            ])
             ->add('first_name', null, [
                 'constraints' => [
                     new NotBlank(message: 'Please enter a name!'),
@@ -66,10 +78,11 @@ class RegistrationFormType extends AbstractType
             ],)
             ->add('dateOfBirth', DateType::class, [
                 'widget' => 'choice',
-
+                'years' => range(date('Y') - 150, date('Y')),
+                'data' => new \DateTime(),
                 'constraints' => [
                     new NotBlank(message: 'Please enter a date of birth!'),
-                    new LessThanOrEqual([
+                    new LessThan([
                         'value' => new \DateTime(),
                         'message' => 'The date of birth cannot be in the future!',
                     ]),
