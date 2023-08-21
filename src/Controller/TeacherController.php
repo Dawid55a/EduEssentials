@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\TeacherFindFormType;
 use App\Service\TeacherService;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,16 @@ class TeacherController extends AbstractController
             'controller_name' => 'TeacherController',
             'search_form' => $form->createView(),
             'teachersBySubject' => $teachersBySubject ?? null,
+        ]);
+    }
+
+    #[Route('/teacher/{id}', name: 'app_teacher_detail')]
+    public function detail(int $id): Response
+    {
+        $teacher = $this->teacherService->findTeacher($id);
+
+        return $this->render('teacher/detail.html.twig', [
+            'selectedTeacher' => $teacher,
         ]);
     }
 }
