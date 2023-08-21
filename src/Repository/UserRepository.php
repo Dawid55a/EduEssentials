@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -64,4 +65,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function getTeachers(string $search)
+    {
+        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm->addRootEntityFromClassMetadata('App\Entity\User', 'u');
+        $sql =  "
+            SELECT * FROM \"user\"
+            WHERE roles::jsonb @> :role::jsonb
+            AND (first_name LIKE :search OR last_name LIKE :search);
+        ";
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter('role', '"ROLE_TEACHER"');
+        $query->setParameter('search', '%'.$search.'%');
+        return $query->getResult();
+    }
 }

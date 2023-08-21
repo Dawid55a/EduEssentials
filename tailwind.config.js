@@ -51,6 +51,10 @@ module.exports = {
     }
   },
   plugins: [
-    require('flowbite/plugin') // add the flowbite plugin
+    require('flowbite/plugin')({
+      charts: true,
+      forms: true,
+      tooltips: true
+    })
   ],
 }
