@@ -18,16 +18,15 @@ class Course
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: Lesson::class, orphanRemoval: true)]
-    private Collection $lessons;
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: Student::class)]
+    private Collection $students;
 
-    #[ORM\OneToMany(mappedBy: 'course', targetEntity: User::class)]
-    private Collection $users;
+    #[ORM\OneToOne(inversedBy: 'course', cascade: ['persist', 'remove'])]
+    private ?Teacher $home_teacher = null;
 
     public function __construct()
     {
-        $this->lessons = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->students = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,61 +47,43 @@ class Course
     }
 
     /**
-     * @return Collection<int, Lesson>
+     * @return Collection<int, Student>
      */
-    public function getLessons(): Collection
+    public function getStudents(): Collection
     {
-        return $this->lessons;
+        return $this->students;
     }
 
-    public function addLesson(Lesson $lesson): static
+    public function addStudent(Student $student): static
     {
-        if (!$this->lessons->contains($lesson)) {
-            $this->lessons->add($lesson);
-            $lesson->setCourse($this);
+        if (!$this->students->contains($student)) {
+            $this->students->add($student);
+            $student->setCourse($this);
         }
 
         return $this;
     }
 
-    public function removeLesson(Lesson $lesson): static
+    public function removeStudent(Student $student): static
     {
-        if ($this->lessons->removeElement($lesson)) {
+        if ($this->students->removeElement($student)) {
             // set the owning side to null (unless already changed)
-            if ($lesson->getCourse() === $this) {
-                $lesson->setCourse(null);
+            if ($student->getCourse() === $this) {
+                $student->setCourse(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
+    public function getHomeTeacher(): ?Teacher
     {
-        return $this->users;
+        return $this->home_teacher;
     }
 
-    public function addUser(User $user): static
+    public function setHomeTeacher(?Teacher $home_teacher): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getCourse() === $this) {
-                $user->setCourse(null);
-            }
-        }
+        $this->home_teacher = $home_teacher;
 
         return $this;
     }

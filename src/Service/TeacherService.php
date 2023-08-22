@@ -4,30 +4,33 @@ namespace App\Service;
 
 use AllowDynamicProperties;
 use App\Entity\User;
+use App\Repository\TeacherRepository;
+use App\Repository\TestRepository;
 use App\Repository\UserRepository;
 
 #[AllowDynamicProperties]
 class TeacherService
 {
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, TestRepository $testRepository, TeacherRepository $teacherRepository)
     {
         $this->userRepository = $userRepository;
+        $this->testRepository = $testRepository;
+        $this->teacherRepository = $teacherRepository;
     }
 
-    public function findTeacher(int $id): ?User
+    public function searchTeachers(string $search): array
     {
-        return $this->userRepository->find($id);
+        return $this->teacherRepository->searchTeachers($search);
     }
-    public function findTeachers(string $search): array
-    {
-        return $this->userRepository->searchTeachers($search);
-    }
+
     public function getTeachersGroupedBySubjects(array $teachers): array
     {
+        $extTeachers = $this->teacherRepository->searchTeachersInfoGroupedBySubject($teachers);
+
         $subjectsWithTeachers = [];
 
-        foreach ($teachers as $teacher) {
-            $subjects = $teacher->getTeachingSubjects();
+        foreach ($extTeachers as $teacher) {
+            $subjects = $teacher->getSubjects();
             foreach ($subjects as $subject) {
                 $subjectName = $subject->getName(); // Assuming subject has a getName() method
                 if (!isset($subjectsWithTeachers[$subjectName])) {
@@ -36,7 +39,6 @@ class TeacherService
                 $subjectsWithTeachers[$subjectName][] = $teacher;
             }
         }
-
         return $subjectsWithTeachers;
     }
 }

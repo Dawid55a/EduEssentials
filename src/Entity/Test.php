@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
@@ -15,21 +16,27 @@ class Test
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tests')]
-    private ?Lesson $lesson = null;
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $status = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $datetime = null;
 
     #[ORM\Column]
     private ?int $weight = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tests')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $teacher = null;
-
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Grade::class, orphanRemoval: true)]
     private Collection $grades;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\ManyToOne(inversedBy: 'tests')]
+    private ?Subject $subject = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tests')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Teacher $teacher = null;
 
     public function __construct()
     {
@@ -41,14 +48,38 @@ class Test
         return $this->id;
     }
 
-    public function getLesson(): ?Lesson
+    public function getName(): ?string
     {
-        return $this->lesson;
+        return $this->name;
     }
 
-    public function setLesson(?Lesson $lesson): static
+    public function setName(string $name): static
     {
-        $this->lesson = $lesson;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDatetime(): ?\DateTimeInterface
+    {
+        return $this->datetime;
+    }
+
+    public function setDatetime(?\DateTimeInterface $datetime): static
+    {
+        $this->datetime = $datetime;
 
         return $this;
     }
@@ -61,18 +92,6 @@ class Test
     public function setWeight(int $weight): static
     {
         $this->weight = $weight;
-
-        return $this;
-    }
-
-    public function getTeacher(): ?User
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(?User $teacher): static
-    {
-        $this->teacher = $teacher;
 
         return $this;
     }
@@ -107,14 +126,26 @@ class Test
         return $this;
     }
 
-    public function getName(): ?string
+    public function getSubject(): ?Subject
     {
-        return $this->name;
+        return $this->subject;
     }
 
-    public function setName(string $name): static
+    public function setSubject(?Subject $subject): static
     {
-        $this->name = $name;
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getTeacher(): ?Teacher
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(?Teacher $teacher): static
+    {
+        $this->teacher = $teacher;
 
         return $this;
     }

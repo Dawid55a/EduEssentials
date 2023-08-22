@@ -33,7 +33,7 @@ class TeacherController extends AbstractController
             if (empty($search)) {
                 $search = '';
             }
-            $teachers = $this->teacherService->findTeachers($search);
+            $teachers = $this->teacherService->searchTeachers($search);
             $teachersBySubject = $this->teacherService->getTeachersGroupedBySubjects($teachers);
         }
 
@@ -44,13 +44,13 @@ class TeacherController extends AbstractController
         ]);
     }
 
-    #[Route('/teacher/{id}', name: 'app_teacher_detail')]
-    public function detail(int $id): Response
-    {
-        $teacher = $this->teacherService->findTeacher($id);
-
-        return $this->render('teacher/detail.html.twig', [
-            'selectedTeacher' => $teacher,
-        ]);
-    }
+//    #[Route('/teacher/{id}', name: 'app_teacher_detail')]
+//    public function detail(int $id): Response
+//    {
+//        $teacher = $this->teacherService->findTeacher($id);
+//
+//        return $this->render('teacher/detail.html.twig', [
+//            'selectedTeacher' => $teacher,
+//        ]);
+//    }
 }

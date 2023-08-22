@@ -18,19 +18,19 @@ class Subject
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'teaching_subjects')]
-    private Collection $teachers;
-
-    #[ORM\OneToMany(mappedBy: 'subject', targetEntity: Lesson::class)]
-    private Collection $lessons;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $short_name = null;
 
+    #[ORM\OneToMany(mappedBy: 'subject', targetEntity: Test::class)]
+    private Collection $tests;
+
+    #[ORM\ManyToMany(targetEntity: Teacher::class, mappedBy: 'subjects')]
+    private Collection $teachers;
+
     public function __construct()
     {
+        $this->tests = new ArrayCollection();
         $this->teachers = new ArrayCollection();
-        $this->lessons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,60 +50,6 @@ class Subject
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getTeachers(): Collection
-    {
-        return $this->teachers;
-    }
-
-    public function addTeacher(User $teacher): static
-    {
-        if (!$this->teachers->contains($teacher)) {
-            $this->teachers->add($teacher);
-        }
-
-        return $this;
-    }
-
-    public function removeTeacher(User $teacher): static
-    {
-        $this->teachers->removeElement($teacher);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Lesson>
-     */
-    public function getLessons(): Collection
-    {
-        return $this->lessons;
-    }
-
-    public function addLesson(Lesson $lesson): static
-    {
-        if (!$this->lessons->contains($lesson)) {
-            $this->lessons->add($lesson);
-            $lesson->setSubject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLesson(Lesson $lesson): static
-    {
-        if ($this->lessons->removeElement($lesson)) {
-            // set the owning side to null (unless already changed)
-            if ($lesson->getSubject() === $this) {
-                $lesson->setSubject(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getShortName(): ?string
     {
         return $this->short_name;
@@ -112,6 +58,63 @@ class Subject
     public function setShortName(?string $short_name): static
     {
         $this->short_name = $short_name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Test>
+     */
+    public function getTests(): Collection
+    {
+        return $this->tests;
+    }
+
+    public function addTest(Test $test): static
+    {
+        if (!$this->tests->contains($test)) {
+            $this->tests->add($test);
+            $test->setSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTest(Test $test): static
+    {
+        if ($this->tests->removeElement($test)) {
+            // set the owning side to null (unless already changed)
+            if ($test->getSubject() === $this) {
+                $test->setSubject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Teacher>
+     */
+    public function getTeachers(): Collection
+    {
+        return $this->teachers;
+    }
+
+    public function addTeacher(Teacher $teacher): static
+    {
+        if (!$this->teachers->contains($teacher)) {
+            $this->teachers->add($teacher);
+            $teacher->addSubject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeacher(Teacher $teacher): static
+    {
+        if ($this->teachers->removeElement($teacher)) {
+            $teacher->removeSubject($this);
+        }
 
         return $this;
     }

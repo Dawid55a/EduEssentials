@@ -15,7 +15,15 @@ class Grade
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?float $value = null;
+    private ?float $grade = null;
+
+    #[ORM\ManyToOne(inversedBy: 'grades')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Test $test = null;
+
+    #[ORM\ManyToOne(inversedBy: 'grades')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Student $student = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $issue_datetime = null;
@@ -23,26 +31,43 @@ class Grade
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $change_datetime = null;
 
-    #[ORM\ManyToOne(inversedBy: 'grades')]
-    private ?User $student = null;
-
-    #[ORM\ManyToOne(inversedBy: 'grades')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Test $test = null;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getValue(): ?float
+    public function getGrade(): ?float
     {
-        return $this->value;
+        return $this->grade;
     }
 
-    public function setValue(float $value): static
+    public function setGrade(float $grade): static
     {
-        $this->value = $value;
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): static
+    {
+        $this->test = $test;
+
+        return $this;
+    }
+
+    public function getStudent(): ?Student
+    {
+        return $this->student;
+    }
+
+    public function setStudent(?Student $student): static
+    {
+        $this->student = $student;
 
         return $this;
     }
@@ -67,30 +92,6 @@ class Grade
     public function setChangeDatetime(?\DateTimeInterface $change_datetime): static
     {
         $this->change_datetime = $change_datetime;
-
-        return $this;
-    }
-
-    public function getStudent(): ?User
-    {
-        return $this->student;
-    }
-
-    public function setStudent(?User $student): static
-    {
-        $this->student = $student;
-
-        return $this;
-    }
-
-    public function getTest(): ?Test
-    {
-        return $this->test;
-    }
-
-    public function setTest(?Test $test): static
-    {
-        $this->test = $test;
 
         return $this;
     }
