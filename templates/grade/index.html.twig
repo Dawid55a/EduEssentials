@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GradeController!{% endblock %}
+
+{% block body %}
+    <table class="min-w-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-lg rounded-lg">
+        <thead>
+        <tr class="text-left">
+            <th class="px-4 py-2">Numer ucznia</th>
+            <th class="px-4 py-2">Imię</th>
+            <th class="px-4 py-2">Nazwisko</th>
+            {#            {% for test in tests %} #}
+            {#                <th class="px-4 py-2">Ocena z testu {{ loop.index }}</th> #}
+            {#            {% endfor %} #}
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+            <tr class="border-b border-gray-200 dark:border-gray-600">
+                {#                <td class="px-4 py-2">{{ student.number }}</td> #}
+                <td class="px-4 py-2">{{ student.firstName }}</td>
+                <td class="px-4 py-2">{{ student.lastName }}</td>
+                {% for grade in student.grades %}
+                    <td class="px-4 py-2">
+                        <label>
+                            <input type="text" value="{{ grade }}" name="grades[{{ student.number }}][{{ loop.index }}]"
+                                   class="px-2 py-1 border rounded-md text-black"/>
+                        </label>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -66,18 +67,41 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 //        ;
 //    }
 
-    public function getTeachers(string $search)
+    private function addGetOnlyTeachers(QueryBuilder $queryBuilder = null): QueryBuilder
     {
-        $rsm = new ResultSetMappingBuilder($this->_em);
-        $rsm->addRootEntityFromClassMetadata('App\Entity\User', 'u');
-        $sql =  "
-            SELECT * FROM \"user\"
-            WHERE roles::jsonb @> :role::jsonb
-            AND (first_name LIKE :search OR last_name LIKE :search);
-        ";
-        $query = $this->_em->createNativeQuery($sql, $rsm);
-        $query->setParameter('role', '"ROLE_TEACHER"');
-        $query->setParameter('search', '%'.$search.'%');
-        return $query->getResult();
+        $queryBuilder = $queryBuilder ?? $this->createQueryBuilder('u');
+        return $queryBuilder
+            ->andWhere('CONTAINS(u.roles, :role) = TRUE')
+            ->setParameter('role', '["ROLE_TEACHER"]');
+    }
+
+    private function addGetOnlyStudents(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        $queryBuilder = $queryBuilder ?? $this->createQueryBuilder('u');
+        return $queryBuilder
+            ->andWhere('CONTAINS(u.roles, :role) = TRUE')
+            ->setParameter('role', '["ROLE_STUDENT"]');
+    }
+
+    public function searchTeachers(string $search)
+    {
+        $qb = $this->addGetOnlyTeachers();
+        $qb->andWhere('u.first_name LIKE :search OR u.last_name LIKE :search')
+            ->setParameter('search', '%' . $search . '%');
+        return $qb->getQuery()->getResult();
+
+
+    }
+
+    public function getTeachers()
+    {
+        $qb = $this->addGetOnlyTeachers();
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getStudents()
+    {
+        $qb = $this->addGetOnlyStudents();
+        return $qb->getQuery()->getResult();
     }
 }

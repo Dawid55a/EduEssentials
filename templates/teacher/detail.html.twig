@@ -1,0 +1,10 @@
+{% extends 'teacher/index.html.twig' %}
+
+{% block details %}
+    <div class="p-4">
+        <h1>{{ selectedTeacher.firstName }} {{ selectedTeacher.lastName }}</h1>
+        <p>Email: {{ selectedTeacher.email }}</p>
+        <p>Subjects: {{ selectedTeacher.teachingSubjects|join(', ') }}</p>
+        {# Add any other details you want to display here #}
+    </div>
+{% endblock %}
