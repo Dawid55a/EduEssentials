@@ -31,12 +31,15 @@ class Test
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Grade::class, orphanRemoval: true)]
     private Collection $grades;
 
-    #[ORM\ManyToOne(inversedBy: 'tests')]
-    private ?Subject $subject = null;
 
     #[ORM\ManyToOne(inversedBy: 'tests')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Teacher $teacher = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tests')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?CourseSubject $course_subject = null;
+
 
     public function __construct()
     {
@@ -126,18 +129,6 @@ class Test
         return $this;
     }
 
-    public function getSubject(): ?Subject
-    {
-        return $this->subject;
-    }
-
-    public function setSubject(?Subject $subject): static
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
     public function getTeacher(): ?Teacher
     {
         return $this->teacher;
@@ -149,4 +140,17 @@ class Test
 
         return $this;
     }
+
+    public function getCourseSubject(): ?CourseSubject
+    {
+        return $this->course_subject;
+    }
+
+    public function setCourseSubject(?CourseSubject $course_subject): static
+    {
+        $this->course_subject = $course_subject;
+
+        return $this;
+    }
+
 }

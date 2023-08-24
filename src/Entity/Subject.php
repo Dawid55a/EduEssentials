@@ -21,16 +21,12 @@ class Subject
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $short_name = null;
 
-    #[ORM\OneToMany(mappedBy: 'subject', targetEntity: Test::class)]
-    private Collection $tests;
-
     #[ORM\OneToMany(mappedBy: 'subject', targetEntity: CourseSubject::class)]
     private Collection $courseSubjects;
 
 
     public function __construct()
     {
-        $this->tests = new ArrayCollection();
         $this->courseSubjects = new ArrayCollection();
     }
 
@@ -62,37 +58,7 @@ class Subject
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Test>
-     */
-    public function getTests(): Collection
-    {
-        return $this->tests;
-    }
-
-    public function addTest(Test $test): static
-    {
-        if (!$this->tests->contains($test)) {
-            $this->tests->add($test);
-            $test->setSubject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTest(Test $test): static
-    {
-        if ($this->tests->removeElement($test)) {
-            // set the owning side to null (unless already changed)
-            if ($test->getSubject() === $this) {
-                $test->setSubject(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection<int, CourseSubject>
      */

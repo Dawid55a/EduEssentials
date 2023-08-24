@@ -19,7 +19,7 @@ class TestFixtures extends Fixture implements DependentFixtureInterface
         $test->setName('Test 1');
         $test->setWeight(2);
         $test->setStatus(1);
-        $test->setSubject($this->getReference('math'));
+        $test->setCourseSubject($this->getReference('courseSubject1'));
         $test->setTeacher($this->getReference('teacher1'));
 
         $manager->persist($test);
@@ -27,15 +27,15 @@ class TestFixtures extends Fixture implements DependentFixtureInterface
         $test2->setName('Test 2');
         $test2->setWeight(5);
         $test2->setStatus(0);
-        $test2->setSubject($this->getReference('eng'));
         $test2->setTeacher($this->getReference('teacher3'));
+        $test2->setCourseSubject($this->getReference('courseSubject4'));
         $manager->persist($test2);
 
         $test3 = new Test();
         $test3->setName('Test 3');
         $test3->setWeight(3);
         $test3->setStatus(1);
-        $test3->setSubject($this->getReference('math'));
+        $test3->setCourseSubject($this->getReference('courseSubject1'));
         $test3->setTeacher($this->getReference('teacher1'));
         $manager->persist($test3);
 
@@ -51,7 +51,7 @@ class TestFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             TeacherFixtures::class,
-            SubjectFixtures::class
+            CourseSubjectFixtures::class
         ];
     }
 }

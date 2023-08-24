@@ -20,7 +20,7 @@ class StudentService
         $grades = $this->gradeRepository->findGradesWithSubjectAndTestByStudentId($studentId);
         $groupedGrades = [];
         foreach ($grades as $grade) {
-            $subjectName = $grade['subject'];
+            $subjectName = $grade['subjectName'];
             if (!array_key_exists($subjectName, $groupedGrades)) {
                 $groupedGrades[$subjectName] = [];
             }

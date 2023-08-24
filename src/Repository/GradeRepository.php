@@ -32,12 +32,13 @@ class GradeRepository extends ServiceEntityRepository
 
     public function findGradesWithSubjectAndTestByStudentId($studentId)
     {
-        $qb = $this->createQueryBuilder('g');
-        $qb->select('g.grade', 's.name as subject', 't.name', 't.weight')
-            ->andWhere('g.student = :studentId')
+        $qb = $this->createQueryBuilder('grade');
+        $qb->select('grade.grade', 'subject.name as subjectName', 'test.name', 'test.weight')
+            ->andWhere('grade.student = :studentId')
             ->setParameter('studentId', $studentId)
-            ->leftJoin('g.test', 't')
-            ->leftJoin('t.subject', 's');
+            ->leftJoin('grade.test', 'test')
+            ->leftJoin('test.course_subject', 'courseSubject')
+            ->leftJoin('courseSubject.subject', 'subject');
         return $qb->getQuery()->getResult();
     }
 

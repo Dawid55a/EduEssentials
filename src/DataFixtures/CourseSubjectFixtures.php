@@ -40,6 +40,11 @@ class CourseSubjectFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($courseSubject4);
 
         $manager->flush();
+
+        $this->addReference('courseSubject1', $courseSubject);
+        $this->addReference('courseSubject2', $courseSubject2);
+        $this->addReference('courseSubject3', $courseSubject3);
+        $this->addReference('courseSubject4', $courseSubject4);
     }
 
     public function getDependencies(): array
