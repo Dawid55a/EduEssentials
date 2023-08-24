@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Teacher;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,13 +24,13 @@ class TeacherRepository extends ServiceEntityRepository
 
     public function searchTeachersInfoGroupedBySubject(array $ids)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->createQueryBuilder('teacher');
 
         $qb
-            ->select('teacher, u, s')
-            ->from('App\Entity\Teacher', 'teacher')
-            ->join('teacher.auth_user', 'u')
-            ->join('teacher.subjects', 's')
+            ->addSelect('authUser')
+            ->addSelect('courseSubjects')
+            ->leftJoin('teacher.auth_user', 'authUser')
+            ->leftJoin('teacher.courseSubjects', 'courseSubjects')
             ->where('teacher.id IN (:ids)')
             ->setParameter('ids', $ids);
         return $qb->getQuery()->getResult();
@@ -37,17 +38,41 @@ class TeacherRepository extends ServiceEntityRepository
 
     public function searchTeachers(string $search): array
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->createQueryBuilder('teacher');
 
-        $qb
-            ->select('teacher')
-            ->from('App\Entity\Teacher', 'teacher')
-            ->join('teacher.auth_user', 'u')
-            ->where('u.first_name LIKE :search')
-            ->orWhere('u.last_name LIKE :search');
-        $qb->setParameter('search', '%' . $search . '%');
-        $result = $qb->getQuery()->getResult();
-        return $result;
+        $qb->innerJoin('teacher.auth_user', 'u')
+            ->andWhere('u.first_name LIKE :search OR u.last_name LIKE :search')
+            ->setParameter('search', '%' . $search . '%');;
+        return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findTeacherById(int $id): ?Teacher
+    {
+        $qb = $this->createQueryBuilder('teacher');
+
+        return $qb
+            ->select('teacher')
+            ->join('teacher.auth_user', 'u')
+            ->where('teacher.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findTeacherCourseSubjects(int $id): ?Teacher
+    {
+        $qb = $this->createQueryBuilder('teacher');
+
+        return $qb
+            ->select('teacher')
+            ->join('teacher.course', 'c')
+            ->join('teacher.subjects', 's')
+            ->where('teacher.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

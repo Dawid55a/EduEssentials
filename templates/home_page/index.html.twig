@@ -2,19 +2,15 @@
 
 {% block title %}Home{% endblock %}
 
-{#{% block body %}#}
-{#<style>#}
-{#    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }#}
-{#    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }#}
-{#</style>#}
-
-{#<div class="example-wrapper">#}
-{#    <h1>Hello {{ controller_name }}! ✅</h1>#}
-
-{#    This friendly message is coming from:#}
-{#    <ul>#}
-{#        <li>Your controller at <code><a href="{{ '/home/dawid55a/PhpstormProjects/EduEssentials/src/Controller/HomePageController.php'|file_link(0) }}">src/Controller/HomePageController.php</a></code></li>#}
-{#        <li>Your template at <code><a href="{{ '/home/dawid55a/PhpstormProjects/EduEssentials/templates/home_page/index.html.twig'|file_link(0) }}">templates/home_page/index.html.twig</a></code></li>#}
-{#    </ul>#}
-{#</div>#}
-{#{% endblock %}#}
+{% block body %}
+    <div class="flex flex-col items-center justify-center w-full h-full ">
+        <div class=" flex justify-center items-center flex-col shadow-lg p-8 w-[500px] h-[500px] rounded-full bg-gray-800/80">
+            <h2 class="text-center mb-4 font-semibold dark:text-white text-gray-900">Photo of a cat to brighten your
+                day 😺</h2>
+            <div class="flex justify-center items-center w-64 h-64  relative">
+                <img src="{{ catPhoto }}" alt="cat photo"
+                     class="max-w-full max-h-full object-scale-downshadow-lg rounded-lg shadow-black dark:shadow-white">
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -21,16 +21,17 @@ class Teacher
     #[ORM\OneToOne(mappedBy: 'home_teacher', cascade: ['persist', 'remove'])]
     private ?Course $course = null;
 
-    #[ORM\ManyToMany(targetEntity: Subject::class, inversedBy: 'teachers')]
-    private Collection $subjects;
 
     #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Test::class, orphanRemoval: true)]
     private Collection $tests;
 
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: CourseSubject::class)]
+    private Collection $courseSubjects;
+
     public function __construct()
     {
-        $this->subjects = new ArrayCollection();
         $this->tests = new ArrayCollection();
+        $this->courseSubjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -83,30 +84,6 @@ class Teacher
     }
 
     /**
-     * @return Collection<int, Subject>
-     */
-    public function getSubjects(): Collection
-    {
-        return $this->subjects;
-    }
-
-    public function addSubject(Subject $subject): static
-    {
-        if (!$this->subjects->contains($subject)) {
-            $this->subjects->add($subject);
-        }
-
-        return $this;
-    }
-
-    public function removeSubject(Subject $subject): static
-    {
-        $this->subjects->removeElement($subject);
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Test>
      */
     public function getTests(): Collection
@@ -130,6 +107,36 @@ class Teacher
             // set the owning side to null (unless already changed)
             if ($test->getTeacher() === $this) {
                 $test->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CourseSubject>
+     */
+    public function getCourseSubjects(): Collection
+    {
+        return $this->courseSubjects;
+    }
+
+    public function addCourseSubject(CourseSubject $courseSubject): static
+    {
+        if (!$this->courseSubjects->contains($courseSubject)) {
+            $this->courseSubjects->add($courseSubject);
+            $courseSubject->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourseSubject(CourseSubject $courseSubject): static
+    {
+        if ($this->courseSubjects->removeElement($courseSubject)) {
+            // set the owning side to null (unless already changed)
+            if ($courseSubject->getTeacher() === $this) {
+                $courseSubject->setTeacher(null);
             }
         }
 

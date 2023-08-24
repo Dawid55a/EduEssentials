@@ -29,12 +29,22 @@ class TestFixtures extends Fixture implements DependentFixtureInterface
         $test2->setStatus(0);
         $test2->setSubject($this->getReference('eng'));
         $test2->setTeacher($this->getReference('teacher3'));
-
         $manager->persist($test2);
+
+        $test3 = new Test();
+        $test3->setName('Test 3');
+        $test3->setWeight(3);
+        $test3->setStatus(1);
+        $test3->setSubject($this->getReference('math'));
+        $test3->setTeacher($this->getReference('teacher1'));
+        $manager->persist($test3);
+
         $manager->flush();
 
         $this->addReference('test1', $test);
         $this->addReference('test2', $test2);
+        $this->addReference('test3', $test3);
+
     }
 
     public function getDependencies(): array

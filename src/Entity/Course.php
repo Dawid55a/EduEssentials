@@ -24,9 +24,13 @@ class Course
     #[ORM\OneToOne(inversedBy: 'course', cascade: ['persist', 'remove'])]
     private ?Teacher $home_teacher = null;
 
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: CourseSubject::class)]
+    private Collection $courseSubjects;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
+        $this->courseSubjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,6 +88,36 @@ class Course
     public function setHomeTeacher(?Teacher $home_teacher): static
     {
         $this->home_teacher = $home_teacher;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CourseSubject>
+     */
+    public function getCourseSubjects(): Collection
+    {
+        return $this->courseSubjects;
+    }
+
+    public function addCourseSubject(CourseSubject $courseSubject): static
+    {
+        if (!$this->courseSubjects->contains($courseSubject)) {
+            $this->courseSubjects->add($courseSubject);
+            $courseSubject->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourseSubject(CourseSubject $courseSubject): static
+    {
+        if ($this->courseSubjects->removeElement($courseSubject)) {
+            // set the owning side to null (unless already changed)
+            if ($courseSubject->getCourse() === $this) {
+                $courseSubject->setCourse(null);
+            }
+        }
 
         return $this;
     }

@@ -3,19 +3,23 @@
 namespace App\Service;
 
 use AllowDynamicProperties;
+use App\Entity\Teacher;
 use App\Entity\User;
+use App\Repository\CourseSubjectRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\TestRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 #[AllowDynamicProperties]
 class TeacherService
 {
-    public function __construct(UserRepository $userRepository, TestRepository $testRepository, TeacherRepository $teacherRepository)
+    public function __construct(UserRepository $userRepository, TestRepository $testRepository, TeacherRepository $teacherRepository, CourseSubjectRepository $courseSubjectRepository)
     {
         $this->userRepository = $userRepository;
         $this->testRepository = $testRepository;
         $this->teacherRepository = $teacherRepository;
+        $this->courseSubjectRepository = $courseSubjectRepository;
     }
 
     public function searchTeachers(string $search): array
@@ -23,22 +27,27 @@ class TeacherService
         return $this->teacherRepository->searchTeachers($search);
     }
 
+    public function getTeacherById(int $id): ?Teacher
+    {
+        try {
+            return $this->teacherRepository->findTeacherById($id);
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
+
     public function getTeachersGroupedBySubjects(array $teachers): array
     {
-        $extTeachers = $this->teacherRepository->searchTeachersInfoGroupedBySubject($teachers);
+        $extTeachers = $this->courseSubjectRepository->findTeachersGroupedBySubjectsByIds($teachers);
 
-        $subjectsWithTeachers = [];
-
-        foreach ($extTeachers as $teacher) {
-            $subjects = $teacher->getSubjects();
-            foreach ($subjects as $subject) {
-                $subjectName = $subject->getName(); // Assuming subject has a getName() method
-                if (!isset($subjectsWithTeachers[$subjectName])) {
-                    $subjectsWithTeachers[$subjectName] = [];
-                }
-                $subjectsWithTeachers[$subjectName][] = $teacher;
+        $teachersGroupedBySubjects = [];
+        foreach ($extTeachers as $extTeacher) {
+            if (!isset($teachersGroupedBySubjects[$extTeacher->getSubject()->getName()])) {
+                $teachersGroupedBySubjects[$extTeacher->getSubject()->getName()] = [];
             }
+            $teachersGroupedBySubjects[$extTeacher->getSubject()->getName()][] = $extTeacher->getTeacher();
         }
-        return $subjectsWithTeachers;
+        ksort($teachersGroupedBySubjects);
+        return $teachersGroupedBySubjects;
     }
 }

@@ -24,13 +24,14 @@ class Subject
     #[ORM\OneToMany(mappedBy: 'subject', targetEntity: Test::class)]
     private Collection $tests;
 
-    #[ORM\ManyToMany(targetEntity: Teacher::class, mappedBy: 'subjects')]
-    private Collection $teachers;
+    #[ORM\OneToMany(mappedBy: 'subject', targetEntity: CourseSubject::class)]
+    private Collection $courseSubjects;
+
 
     public function __construct()
     {
         $this->tests = new ArrayCollection();
-        $this->teachers = new ArrayCollection();
+        $this->courseSubjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,27 +94,30 @@ class Subject
     }
 
     /**
-     * @return Collection<int, Teacher>
+     * @return Collection<int, CourseSubject>
      */
-    public function getTeachers(): Collection
+    public function getCourseSubjects(): Collection
     {
-        return $this->teachers;
+        return $this->courseSubjects;
     }
 
-    public function addTeacher(Teacher $teacher): static
+    public function addCourseSubject(CourseSubject $courseSubject): static
     {
-        if (!$this->teachers->contains($teacher)) {
-            $this->teachers->add($teacher);
-            $teacher->addSubject($this);
+        if (!$this->courseSubjects->contains($courseSubject)) {
+            $this->courseSubjects->add($courseSubject);
+            $courseSubject->setSubject($this);
         }
 
         return $this;
     }
 
-    public function removeTeacher(Teacher $teacher): static
+    public function removeCourseSubject(CourseSubject $courseSubject): static
     {
-        if ($this->teachers->removeElement($teacher)) {
-            $teacher->removeSubject($this);
+        if ($this->courseSubjects->removeElement($courseSubject)) {
+            // set the owning side to null (unless already changed)
+            if ($courseSubject->getSubject() === $this) {
+                $courseSubject->setSubject(null);
+            }
         }
 
         return $this;

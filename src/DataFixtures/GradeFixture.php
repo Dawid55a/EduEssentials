@@ -43,6 +43,12 @@ class GradeFixture extends Fixture implements DependentFixtureInterface
         $grade4->setIssueDatetime(new \DateTime('now'));
         $manager->persist($grade4);
 
+        $grade5 = new Grade();
+        $grade5->setGrade(1);
+        $grade5->setStudent($this->getReference('student1'));
+        $grade5->setTest($this->getReference('test3'));
+        $grade5->setIssueDatetime(new \DateTime('now'));
+        $manager->persist($grade5);
         $manager->flush();
     }
 

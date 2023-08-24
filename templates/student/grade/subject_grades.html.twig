@@ -1,0 +1,8 @@
+{% extends 'student/grade/index.html.twig' %}
+
+{% block subjectGrades %}
+    {% for key,test in subjectGrades %}
+        <p class="dark:text-white">{{ key }}
+        <p>{{ dump(test) }}</p>
+    {% endfor %}
+{% endblock %}

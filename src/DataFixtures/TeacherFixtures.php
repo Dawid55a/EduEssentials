@@ -17,18 +17,14 @@ class TeacherFixtures extends Fixture implements DependentFixtureInterface
     {
         $teacher = new Teacher();
         $teacher->setAuthUser($this->getReference('user-teacher1'));
-        $teacher->addSubject($this->getReference('math'));
-        $teacher->addSubject($this->getReference('eng'));
         $manager->persist($teacher);
 
         $teacher2 = new Teacher();
         $teacher2->setAuthUser($this->getReference('user-teacher2'));
-        $teacher2->addSubject($this->getReference('math'));
         $manager->persist($teacher2);
 
         $teacher3 = new Teacher();
         $teacher3->setAuthUser($this->getReference('user-teacher3'));
-        $teacher3->addSubject($this->getReference('eng'));
         $manager->persist($teacher3);
 
 
@@ -44,7 +40,6 @@ class TeacherFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            SubjectFixtures::class
         ];
     }
 }

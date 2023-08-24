@@ -21,4 +21,24 @@ class GradeRepository extends ServiceEntityRepository
         parent::__construct($registry, Grade::class);
     }
 
+    public function findGradeByStudentId($studentId)
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.student = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGradesWithSubjectAndTestByStudentId($studentId)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->select('g.grade', 's.name as subject', 't.name', 't.weight')
+            ->andWhere('g.student = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->leftJoin('g.test', 't')
+            ->leftJoin('t.subject', 's');
+        return $qb->getQuery()->getResult();
+    }
+
 }
