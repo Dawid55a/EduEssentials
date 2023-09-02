@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %} Dodawanie ocen {% endblock %}
+{% block body %}
+    {% block addGrades %}
+        {{ component('AddGradesToTestForm', {
+            'testId': test_id,
+            'studentsIds': studentsIds,
+        }) }}
+
+    {% endblock %}
+{% endblock %}

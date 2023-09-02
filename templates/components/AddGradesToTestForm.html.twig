@@ -1,0 +1,53 @@
+<div
+        {{ attributes }}
+>
+
+    {{ form_start(form, {
+        attr: {
+            'novalidate': true,
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|saveGrades',
+        }
+    }) }}
+    <table class="">
+        <thead>
+        <tr>
+            <td>Student</td>
+            <td>Grade</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, gradeItem in form.grades %}
+            <tr>
+                <td>
+                    {{ form_row(gradeItem.student, {
+                        label: false,
+                    }) }}
+                </td>
+
+                <td>
+                    {{ form_row(gradeItem.grade, {
+                        label: false,
+                    }) }}
+                </td>
+                <td>
+                    {{ form_row(
+                        gradeItem.vars.button_delete,
+                        { label: 'X',
+                            attr:
+                            { class: '' }
+                        }) }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form_widget(
+        form.grades.vars.button_add,
+        { label: '+ Add Item', attr:
+            { class: 'btn btn-outline-primary' }
+        }) }}
+    <button type="submit" class="text-white" formnovalidate>Dodaj ocenę</button>
+    {{ form_end(form) }}
+</div>

@@ -2,12 +2,23 @@
 
 namespace App\Controller;
 
+use App\Service\TeacherService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TeacherController extends AbstractController
 {
+    private TeacherService $teacherService;
+
+    /**
+     * @param TeacherService $teacherService
+     */
+    public function __construct(TeacherService $teacherService)
+    {
+        $this->teacherService = $teacherService;
+    }
+
     #[Route('/teacher', name: 'app_teacher')]
     public function index(): Response
     {
@@ -19,8 +30,67 @@ class TeacherController extends AbstractController
     #[Route('/teacher/grade', name: 'app_teacher_grade')]
     public function grade(): Response
     {
+        $teacherId = $this->getUser()->getTeacher()->getId();
+        $subjectsByCourse = $this->teacherService->getTeachingSubjectsGroupedByCourseForTeacherId($teacherId);
+        dump($subjectsByCourse);
         return $this->render('teacher/grade/index.html.twig', [
             'controller_name' => 'TeacherController',
+            'subjectsByCourse' => $subjectsByCourse
         ]);
+    }
+
+    #[Route('/teacher/grade/{courseSubjectId<\d+>}', name: 'app_teacher_grade_course_subject')]
+    public function grading($courseSubjectId = null): Response
+    {
+        $gradesOnTest = $this->teacherService->getStudentsGradesForCourseSubject($courseSubjectId);
+        $students = $this->teacherService->getStudentsInCourseSubject($courseSubjectId);
+        return $this->render('teacher/grade/grading.html.twig', [
+            'gradesOnTest' => $gradesOnTest,
+            'studentCount' => $students,
+            'courseSubjectId' => $courseSubjectId
+        ]);
+    }
+
+    #[Route('/teacher/test/{courseId<\d+>}/{subjectId<\d+>}', name: 'app_teacher_test_course_subject')]
+    public function addTest($courseId = null, $subjectId = null): Response
+    {
+        $students = $this->teacherService->getStudentsInCourseSubject($courseId);
+        return $this->render('teacher/test/addTest.html.twig', [
+            'students' => $students,
+            'courseId' => $courseId,
+            'subjectId' => $subjectId
+        ]);
+    }
+
+    #[Route('/teacher/grade/{courseSubjectId<\d+>}/{testId<\d+>}', name: 'app_teacher_grade_test')]
+    public function addGrades(int $courseSubjectId, int $testId): Response
+    {
+
+        $studentEntities = $this->teacherService->getStudentsInCourseSubject($courseSubjectId);
+        $studentsIds = [];
+        foreach ($studentEntities as $student) {
+            $studentsIds[] = $student->getId();
+        }
+        return $this->render('teacher/grade/add_grades.html.twig', [
+            'test_id' => $testId,
+            'studentsIds' => $studentsIds,
+            'courseSubjectId' => $courseSubjectId
+        ]);
+    }
+
+    /**
+     * @param int $gradeId
+     * @return Response
+     */
+    #[Route('/teacher/grade/edit/{gradeId<\d+>}', name: 'app_teacher_grade_edit')]
+    public function editGrade(int $gradeId): Response
+    {
+        $grade = $this->teacherService->getGradeById($gradeId);
+
+        return $this->render('teacher/grade/edit_grade.html.twig', [
+            'controller_name' => 'TeacherController',
+            'grade' => $grade
+        ]);
+
     }
 }

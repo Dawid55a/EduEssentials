@@ -64,4 +64,26 @@ class CourseSubjectRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findCourseNameAndSubjectNameForTeacherId($id)
+    {
+        $qb = $this->createQueryBuilder('courseSubject');
+
+        $qb
+            ->addSelect('teacher')
+            ->addSelect('subject')
+            ->addSelect('course')
+            ->leftJoin('courseSubject.teacher', 'teacher')
+            ->leftJoin('courseSubject.subject', 'subject')
+            ->leftJoin('courseSubject.course', 'course')
+            ->andWhere('teacher.id = :id')
+            ->orderBy('subject.name', 'ASC')
+            ->addOrderBy('course.name', 'ASC')
+            ->setParameter('id', $id);
+
+//        dd($qb->getQuery()->getResult());
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

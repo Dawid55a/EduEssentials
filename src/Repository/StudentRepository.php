@@ -21,4 +21,14 @@ class StudentRepository extends ServiceEntityRepository
         parent::__construct($registry, Student::class);
     }
 
+    public function findStudentsInCourse($courseId)
+    {
+        $qb = $this->createQueryBuilder('student')
+            ->addSelect('authUser')
+            ->leftJoin('student.course', 'course')
+            ->leftJoin('student.auth_user', 'authUser')
+            ->andWhere('course.id = :courseId')
+            ->setParameter('courseId', $courseId);
+        return $qb->getQuery()->getResult();
+    }
 }

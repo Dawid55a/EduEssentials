@@ -1,0 +1,14 @@
+<div
+        {{ attributes }}
+>
+
+    {{ form_start(form, {
+        attr: {
+            'novalidate': true,
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|saveChanges',
+        }
+    }) }}
+    {{ form_row(form.grade) }}
+    {{ form_end(form) }}
+</div>

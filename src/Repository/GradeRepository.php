@@ -42,4 +42,33 @@ class GradeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findStudentsGradesForCourseAndSubject(int $courseId, int $subjectId)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->select('g.id as gradeId', 'g.grade as grade', 'user.first_name', 'user.last_name')
+            ->addSelect('t.name as testName', 't.weight as testWeight', 't.id as testId')
+            ->andWhere('courseSubject.course = :courseId')
+            ->andWhere('courseSubject.subject = :subjectId')
+            ->setParameter('courseId', $courseId)
+            ->setParameter('subjectId', $subjectId)
+            ->leftJoin('g.student', 'student')
+            ->leftJoin('student.auth_user', 'user')
+            ->leftJoin('g.test', 't')
+            ->leftJoin('t.course_subject', 'courseSubject');
+//        dd($qb->getQuery()->getResult());
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findGradesOnTestForCourseAndSubject(int $courseId, int $subjectId)
+    {
+        $qb = $this->createQueryBuilder('grade')
+            ->select('test', 'grade')
+            ->leftJoin('grade.test', 'test')
+            ->leftJoin('test.course_subject', 'courseSubject')
+            ->andWhere('courseSubject.course = :courseId')
+            ->andWhere('courseSubject.subject = :subjectId')
+            ->setParameter('courseId', $courseId)
+            ->setParameter('subjectId', $subjectId);
+        return $qb->getQuery()->getResult();
+    }
 }
