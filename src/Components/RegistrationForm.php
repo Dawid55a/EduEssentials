@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Twig;
+namespace App\Components;
 
+use App\Entity\Student;
+use App\Entity\Teacher;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -59,6 +61,16 @@ class RegistrationForm extends AbstractController
 
             $role = $this->getForm()->get('role')->getData();
             $user->setRoles([$role]);
+
+            if ($role === 'ROLE_TEACHER') {
+                $teacher = new Teacher();
+                $user->setTeacher($teacher);
+            } elseif ($role === 'ROLE_STUDENT') {
+                $student = new Student();
+                $user->setStudent($student);
+            } else {
+                throw new Exception('Invalid role');
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
