@@ -1,12 +1,18 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\GradeRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: GradeRepository::class)]
+//TODO: unique entity is not working
+#[UniqueEntity(
+    fields: ['test', 'grade'],
+    message: 'Student already has a grade for this test',
+    errorPath: 'student')]
 class Grade
 {
     #[ORM\Id]
@@ -26,10 +32,10 @@ class Grade
     private ?Student $student = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $issue_datetime = null;
+    private ?DateTimeInterface $issue_datetime = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $change_datetime = null;
+    private ?DateTimeInterface $change_datetime = null;
 
     public function getId(): ?int
     {
@@ -72,24 +78,24 @@ class Grade
         return $this;
     }
 
-    public function getIssueDatetime(): ?\DateTimeInterface
+    public function getIssueDatetime(): ?DateTimeInterface
     {
         return $this->issue_datetime;
     }
 
-    public function setIssueDatetime(\DateTimeInterface $issue_datetime): static
+    public function setIssueDatetime(DateTimeInterface $issue_datetime): static
     {
         $this->issue_datetime = $issue_datetime;
 
         return $this;
     }
 
-    public function getChangeDatetime(): ?\DateTimeInterface
+    public function getChangeDatetime(): ?DateTimeInterface
     {
         return $this->change_datetime;
     }
 
-    public function setChangeDatetime(?\DateTimeInterface $change_datetime): static
+    public function setChangeDatetime(?DateTimeInterface $change_datetime): static
     {
         $this->change_datetime = $change_datetime;
 
