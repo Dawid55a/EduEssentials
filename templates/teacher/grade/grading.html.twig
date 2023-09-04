@@ -1,5 +1,14 @@
 {% block subjectGrades %}
     <turbo-frame id="grading">
+        <a href="{{ path('app_teacher_add_test', {'courseSubjectId' : courseSubjectId}) }}"
+           target="_top">
+            <button type="button"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 lg:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Add test
+            </button>
+        </a>
+
+
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             {% for test in gradesOnTest %}
                 <a class="dark:text-white">{{ test.name }} ({{ test.grades|length }}/{{ studentCount|length }})</a>

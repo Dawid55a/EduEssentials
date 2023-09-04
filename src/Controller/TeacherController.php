@@ -51,14 +51,11 @@ class TeacherController extends AbstractController
         ]);
     }
 
-    #[Route('/teacher/test/{courseId<\d+>}/{subjectId<\d+>}', name: 'app_teacher_test_course_subject')]
-    public function addTest($courseId = null, $subjectId = null): Response
+    #[Route('/teacher/test/{courseSubjectId<\d+>}', name: 'app_teacher_add_test')]
+    public function addTest(int $courseSubjectId): Response
     {
-        $students = $this->teacherService->getStudentsInCourseSubject($courseId);
-        return $this->render('teacher/test/addTest.html.twig', [
-            'students' => $students,
-            'courseId' => $courseId,
-            'subjectId' => $subjectId
+        return $this->render('teacher/test/add_test.html.twig', [
+            'courseSubjectId' => $courseSubjectId
         ]);
     }
 
