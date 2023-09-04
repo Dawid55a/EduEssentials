@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\DTO\TestStatusEnum;
 use App\Repository\TestRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -19,11 +21,11 @@ class Test
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $status = null;
+    #[ORM\Column(type: "test_status", nullable: true,)]
+    private ?TestStatusEnum $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $datetime = null;
+    private ?DateTimeInterface $datetime = null;
 
     #[ORM\Column]
     private ?int $weight = null;
@@ -63,24 +65,24 @@ class Test
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?TestStatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(?int $status): static
+    public function setStatus(?TestStatusEnum $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getDatetime(): ?\DateTimeInterface
+    public function getDatetime(): ?DateTimeInterface
     {
         return $this->datetime;
     }
 
-    public function setDatetime(?\DateTimeInterface $datetime): static
+    public function setDatetime(?DateTimeInterface $datetime): static
     {
         $this->datetime = $datetime;
 
