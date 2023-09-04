@@ -59,6 +59,16 @@ class TeacherController extends AbstractController
         ]);
     }
 
+    #[Route('/teacher/test/edit/{testId<\d+>}', name: 'app_teacher_edit_test')]
+    public function editTest(int $testId): Response
+    {
+        $test = $this->teacherService->getTestById($testId);
+
+        return $this->render('teacher/test/edit_test.html.twig', [
+            'test' => $test
+        ]);
+    }
+
     #[Route('/teacher/grade/{courseSubjectId<\d+>}/{testId<\d+>}', name: 'app_teacher_grade_test')]
     public function addGrades(int $courseSubjectId, int $testId): Response
     {

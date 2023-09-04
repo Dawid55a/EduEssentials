@@ -96,4 +96,9 @@ class TeacherService
         return $this->gradeRepository->find($gradeId);
     }
 
+    public function getTestById(int $testId)
+    {
+        return $this->testRepository->find($testId);
+    }
+
 }

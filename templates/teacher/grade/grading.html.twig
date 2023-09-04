@@ -1,5 +1,6 @@
 {% block subjectGrades %}
     <turbo-frame id="grading">
+
         <a href="{{ path('app_teacher_add_test', {'courseSubjectId' : courseSubjectId}) }}"
            target="_top">
             <button type="button"
@@ -11,7 +12,16 @@
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             {% for test in gradesOnTest %}
-                <a class="dark:text-white">{{ test.name }} ({{ test.grades|length }}/{{ studentCount|length }})</a>
+                <a class="dark:text-white">{{ test.name }} ({{ test.grades|length }}/{{ studentCount|length }})
+                    ({{ test.weight }})</a>
+                <a href="{{ path('app_teacher_edit_test', {'testId' : test.id}) }}"
+                   target="_top">
+                    <button type="button"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 lg:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Edit Test
+                    </button>
+                </a>
+                {% if test.grades|length < studentCount|length %}
                 <a href="{{ path('app_teacher_grade_test', {'courseSubjectId' : courseSubjectId, 'testId' : test.id}) }}"
                    target="_top">
                     <button type="button"
@@ -19,6 +29,7 @@
                         Add Grades
                     </button>
                 </a>
+                {% endif %}
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
