@@ -37,6 +37,11 @@ class Grade
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $change_datetime = null;
 
+    public function __toString(): string
+    {
+        return $this->getStudent() . ' - ' . $this->getGrade();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

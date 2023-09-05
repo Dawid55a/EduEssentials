@@ -34,6 +34,11 @@ class Teacher
         $this->courseSubjects = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->getAuthUser()->getFullName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -32,6 +32,11 @@ class Student
         $this->grades = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->getAuthUser()->getFullName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

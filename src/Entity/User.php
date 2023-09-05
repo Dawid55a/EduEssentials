@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -48,8 +49,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone_number = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_of_birth = null;
+    private ?DateTimeInterface $date_of_birth = null;
 
+    public function __toString(): string
+    {
+        return $this->getFullName();
+    }
+
+    public function getFullName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -192,12 +202,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDateOfBirth(): ?\DateTimeInterface
+    public function getDateOfBirth(): ?DateTimeInterface
     {
         return $this->date_of_birth;
     }
 
-    public function setDateOfBirth(?\DateTimeInterface $date_of_birth): static
+    public function setDateOfBirth(?DateTimeInterface $date_of_birth): static
     {
         $this->date_of_birth = $date_of_birth;
 

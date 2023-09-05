@@ -2,13 +2,12 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use App\Entity\User;
-use App\Entity\Subject;
-use App\Entity\Course;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -50,7 +49,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $teacher1->setLastName('Smith');
         $teacher1->setPhoneNumber("123456789");
         $teacher1->setAddress("123 Fake Street");
-        $teacher1->setDateOfBirth(new \DateTime('now'));
+        $teacher1->setDateOfBirth(new DateTime('now'));
         $manager->persist($teacher1);
 
         $teacher2 = new User();
@@ -61,7 +60,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $teacher2->setLastName('Jones');
         $teacher2->setPhoneNumber("123456789");
         $teacher2->setAddress("123 Fake Street");
-        $teacher2->setDateOfBirth(new \DateTime('now'));
+        $teacher2->setDateOfBirth(new DateTime('now'));
         $manager->persist($teacher2);
 
         $teacher3 = new User();
@@ -72,7 +71,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $teacher3->setLastName('Williams');
         $teacher3->setPhoneNumber("123456789");
         $teacher3->setAddress("123 Fake Street");
-        $teacher3->setDateOfBirth(new \DateTime('now'));
+        $teacher3->setDateOfBirth(new DateTime('now'));
         $manager->persist($teacher3);
 
 
@@ -84,7 +83,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user1->setLastName('Last1');
         $user1->setPhoneNumber("123456789");
         $user1->setAddress("123 Fake Street");
-        $user1->setDateOfBirth(new \DateTime('now'));
+        $user1->setDateOfBirth(new DateTime('now'));
         $manager->persist($user1);
 
         $user2 = new User();
@@ -95,7 +94,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user2->setLastName('Last2');
         $user2->setPhoneNumber("123456789");
         $user2->setAddress("123 Fake Street");
-        $user2->setDateOfBirth(new \DateTime('now'));
+        $user2->setDateOfBirth(new DateTime('now'));
         $manager->persist($user2);
 
         $user3 = new User();
@@ -106,7 +105,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user3->setLastName('Last3');
         $user3->setPhoneNumber("123456789");
         $user3->setAddress("123 Fake Street");
-        $user3->setDateOfBirth(new \DateTime('now'));
+        $user3->setDateOfBirth(new DateTime('now'));
         $manager->persist($user3);
 
         $user4 = new User();
@@ -117,7 +116,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $user4->setLastName('Last4');
         $user4->setPhoneNumber("123456789");
         $user4->setAddress("123 Fake Street");
-        $user4->setDateOfBirth(new \DateTime('now'));
+        $user4->setDateOfBirth(new DateTime('now'));
         $manager->persist($user4);
         $manager->flush();
 
@@ -128,6 +127,18 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $this->addReference('user2', $user2);
         $this->addReference('user3', $user3);
         $this->addReference('user4', $user4);
+
+        $admin = new User();
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setEmail('admin@admin.com');
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'password'));
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Admin');
+        $admin->setPhoneNumber("123456789");
+        $admin->setAddress("123 Fake Street");
+        $admin->setDateOfBirth(new DateTime('now'));
+        $manager->persist($admin);
+        $manager->flush();
 
     }
 
