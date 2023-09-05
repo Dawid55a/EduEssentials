@@ -2,17 +2,32 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\TeacherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+//TODO: Check why the serialization context is not working
 #[ORM\Entity(repositoryClass: TeacherRepository::class)]
+#[ApiResource(
+    description: 'Teachers are users with a role of teacher',
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ],
+    normalizationContext: ['groups' => ['teacher:read'], 'jsonld_embed_context' => true],
+    paginationEnabled: false,
+)]
 class Teacher
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['teacher:read'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(mappedBy: 'teacher', cascade: ['persist', 'remove'])]
@@ -44,11 +59,11 @@ class Teacher
         return $this->id;
     }
 
+    #[Groups(['teacher:read', 'user:read'])]
     public function getAuthUser(): ?User
     {
         return $this->auth_user;
     }
-
     public function setAuthUser(?User $auth_user): static
     {
         // unset the owning side of the relation if necessary
@@ -66,11 +81,11 @@ class Teacher
         return $this;
     }
 
+    #[Groups(['teacher:read', 'course:read'])]
     public function getCourse(): ?Course
     {
         return $this->course;
     }
-
     public function setCourse(?Course $course): static
     {
         // unset the owning side of the relation if necessary

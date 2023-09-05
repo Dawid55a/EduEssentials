@@ -2,15 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ApiResource(
+    description: 'Users are the main entity of the system',
+    operations: [new GetCollection(), new Get()],
+    normalizationContext: ['groups' => ['user:read']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,6 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private array $roles = [];
 
     /**
@@ -31,24 +41,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $last_name = null;
 
     #[ORM\OneToOne(inversedBy: 'auth_user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read'])]
     private ?Teacher $teacher = null;
 
     #[ORM\OneToOne(inversedBy: 'auth_user', cascade: ['persist', 'remove'])]
     private ?Student $student = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $phone_number = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['user:read'])]
     private ?DateTimeInterface $date_of_birth = null;
 
     public function __toString(): string
@@ -56,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getFullName();
     }
 
+    #[Groups(['user:read'])]
     public function getFullName(): string
     {
         return $this->first_name . ' ' . $this->last_name;
@@ -65,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    #[Groups(['user:read'])]
     public function getEmail(): ?string
     {
         return $this->email;
@@ -90,6 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[Groups(['user:read'])]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -178,6 +197,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[Groups(['user:read'])]
     public function getAddress(): ?string
     {
         return $this->address;
@@ -190,6 +210,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[Groups(['user:read'])]
     public function getPhoneNumber(): ?string
     {
         return $this->phone_number;
@@ -202,6 +223,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[Groups(['user:read'])]
     public function getDateOfBirth(): ?DateTimeInterface
     {
         return $this->date_of_birth;

@@ -2,12 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
+#[ApiResource(
+    description: 'Courses are groups of teaching subjects',
+    operations: [new Get()],
+    normalizationContext: ['groups' => ['course:read']],
+)]
 class Course
 {
     #[ORM\Id]
@@ -16,6 +24,7 @@ class Course
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['course:read'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'course', targetEntity: Student::class)]
