@@ -1,0 +1,13 @@
+# See the configuration reference at https://symfony.com/bundles/SchebTwoFactorBundle/6.x/configuration.html
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
+    totp:
+        enabled: true
+        issuer: 'Dawid Kiełkowski App'
+        template: 'security/2fa/totp_form.html.twig'
+#    email:
+#        digits: 6
+#        enabled: true
+#        sender_email: no-reply@example.com
+#        sender_name: Dawid Kiełkowski  # Optional

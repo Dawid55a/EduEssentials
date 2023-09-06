@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Service\CatApiService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomePageController extends AbstractController
+class HomePageController extends BaseController
 {
     #[Route('/', name: 'app_home_page')]
     public function index(CatApiService $catApi): Response

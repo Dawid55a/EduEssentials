@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    Use your 2FA app to scan the QR code below. Once scanned, enter the 6-digit code from the app to verify your account.
+    <img src="{{ path('app_qr_code') }}" alt="404" class="2fa qr code">
+{% endblock %}
+
+
+
