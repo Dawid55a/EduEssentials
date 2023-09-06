@@ -43,6 +43,15 @@ class EditTestForm extends AbstractController
         return null;
     }
 
+    #[LiveAction]
+    public function deleteTest(EntityManagerInterface $entityManager): ?RedirectResponse
+    {
+        $entityManager->remove($this->test);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_teacher_grade');
+    }
+
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(EditTestFormType::class, $this->test);
