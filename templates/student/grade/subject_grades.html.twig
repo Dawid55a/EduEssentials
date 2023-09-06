@@ -1,8 +1,25 @@
 {% extends 'student/grade/index.html.twig' %}
 
 {% block subjectGrades %}
-    {% for key,test in subjectGrades %}
-        <p class="dark:text-white">{{ key }}
-        <p>{{ dump(test) }}</p>
-    {% endfor %}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <table class="">
+            <thead>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+                <th class="py-2 px-4 text-left text-gray-600 dark:text-gray-300">Test</th>
+                <th class="py-2 px-4 text-left text-gray-600 dark:text-gray-300">Weight</th>
+                <th class="py-2 px-4 text-left text-gray-600 dark:text-gray-300">Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, test in subjectGrades %}
+                <tr class="{{ loop.index is not odd ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800' }}">
+                    <td class="py-2 px-4 dark:text-white">{{ key }}</td>
+                    <td class="py-2 px-4 dark:text-white">{{ test.weight }}</td>
+                    <td class="py-2 px-4 {{ test.weight >= 3 ? 'text-red-800 dark:text-red-600' : 'dark:text-white' }}">{{ test.grade }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}
