@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\TeacherDetailsDTO;
 use App\Form\TeacherFindFormType;
 use App\Service\TeacherService;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,8 +56,18 @@ class WorkersController extends BaseController
 
         $teacher = $this->teacherService->getTeacherById($id);
 
+        $teacherDto = TeacherDetailsDTO::create([
+            'firstName' => $teacher->getAuthUser()->getFirstName(),
+            'lastName' => $teacher->getAuthUser()->getLastName(),
+            'email' => $teacher->getAuthUser()->getEmail(),
+            'phone' => $teacher->getAuthUser()->getPhoneNumber(),
+            'address' => $teacher->getAuthUser()->getAddress(),
+            'dateOfBirth' => $teacher->getAuthUser()->getDateOfBirth(),
+            'subjects' => $teacher->getTeachingSubjects(),
+        ]);
+
         return $this->render('workers/detail.html.twig', [
-            'teacher' => $teacher,
+            'teacher' => $teacherDto,
         ]);
     }
 

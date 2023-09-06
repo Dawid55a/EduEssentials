@@ -2,19 +2,25 @@
     <turbo-frame id="teacher-details">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
-                {{ teacher.authUser.firstName }} {{ teacher.authUser.lastName }}
+                {{ teacher.firstName }} {{ teacher.lastName }}
             </h2>
             <p class="mt-2 text-gray-600 dark:text-gray-300">
-                <span class="font-semibold text-gray-800 dark:text-white">Email:</span> {{ teacher.authUser.email }}
+                <span class="font-semibold text-gray-800 dark:text-white">Email:</span> {{ teacher.email }}
             </p>
             <p class="mt-2 text-gray-600 dark:text-gray-300">
-                <span class="font-semibold text-gray-800 dark:text-white">Phone Number:</span> {{ teacher.authUser.phoneNumber }}
+                <span class="font-semibold text-gray-800 dark:text-white">Phone Number:</span> {{ teacher.phone }}
             </p>
             <p class="mt-2 text-gray-600 dark:text-gray-300">
-                <span class="font-semibold text-gray-800 dark:text-white">Address:</span> {{ teacher.authUser.address }}
+                <span class="font-semibold text-gray-800 dark:text-white">Address:</span> {{ teacher.address }}
             </p>
             <p class="mt-2 text-gray-600 dark:text-gray-300">
-                <span class="font-semibold text-gray-800 dark:text-white">Date of Birth:</span> {{ teacher.authUser.dateOfBirth|format_date('long') }}
+                <span class="font-semibold text-gray-800 dark:text-white">Date of Birth:</span> {{ teacher.dateOfBirth|format_date('long') }}
+            </p>
+            <p class="mt-2 text-gray-600 dark:text-gray-300">
+                <span class="font-semibold text-gray-800 dark:text-white mr-2">Teaching Subjects:</span>
+                {% for subject in teacher.subjects %}
+                    <span class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-full px-3 py-1 text-sm font-semibold mr-2">{{ subject.name }}</span>
+                {% endfor %}
             </p>
         </div>
     </turbo-frame>

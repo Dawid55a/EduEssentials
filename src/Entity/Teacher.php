@@ -64,6 +64,7 @@ class Teacher
     {
         return $this->auth_user;
     }
+
     public function setAuthUser(?User $auth_user): static
     {
         // unset the owning side of the relation if necessary
@@ -86,6 +87,7 @@ class Teacher
     {
         return $this->course;
     }
+
     public function setCourse(?Course $course): static
     {
         // unset the owning side of the relation if necessary
@@ -139,6 +141,19 @@ class Teacher
     public function getCourseSubjects(): Collection
     {
         return $this->courseSubjects;
+    }
+
+    /**
+     * @return Collection<int, Subject>
+     */
+    public function getTeachingSubjects(): Collection
+    {
+        return new ArrayCollection(array_unique($this->courseSubjects
+            ->map(
+                fn(CourseSubject $courseSubject) => $courseSubject->getSubject()
+            )
+            ->toArray()
+        ));
     }
 
     public function addCourseSubject(CourseSubject $courseSubject): static
