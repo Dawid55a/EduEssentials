@@ -13,7 +13,7 @@ class TeacherTest extends TestCase
     public function testCreateTeacher()
     {
         $teacher = new Teacher();
-        $this->assertInstanceOf(Teacher::class, $teacher);
+        $this->assertInstanceOf(Teacher::class, $teacher, 'The created object is not the same as the expected one');
     }
 
     public function testAddAndRemoveTest()
@@ -22,10 +22,10 @@ class TeacherTest extends TestCase
         $testMock = $this->createMock(Test::class);
 
         $teacher->addTest($testMock);
-        $this->assertCount(1, $teacher->getTests());
+        $this->assertCount(1, $teacher->getTests(), 'The test was not added to the teacher');
 
         $teacher->removeTest($testMock);
-        $this->assertCount(0, $teacher->getTests());
+        $this->assertCount(0, $teacher->getTests(), 'The test was not removed from the teacher');
     }
 
     public function testAddAndRemoveCourseSubject()
@@ -34,10 +34,10 @@ class TeacherTest extends TestCase
         $courseSubjectMock = $this->createMock(CourseSubject::class);
 
         $teacher->addCourseSubject($courseSubjectMock);
-        $this->assertCount(1, $teacher->getCourseSubjects());
+        $this->assertCount(1, $teacher->getCourseSubjects(), 'The course subject was not added to the teacher');
 
         $teacher->removeCourseSubject($courseSubjectMock);
-        $this->assertCount(0, $teacher->getCourseSubjects());
+        $this->assertCount(0, $teacher->getCourseSubjects(), 'The course subject was not removed from the teacher');
     }
 
     public function testGetTeachingSubjects()
@@ -54,7 +54,7 @@ class TeacherTest extends TestCase
         $teacher->addCourseSubject($courseSubjectMock1);
         $teacher->addCourseSubject($courseSubjectMock2);
 
-        $this->assertCount(1, $teacher->getTeachingSubjects());
+        $this->assertCount(1, $teacher->getTeachingSubjects(), 'The teacher is teaching more than one subject');
     }
 }
 

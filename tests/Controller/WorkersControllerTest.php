@@ -11,7 +11,7 @@ class WorkersControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/workers');
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful('The response was not successful');
     }
 
     public function testSearchFormIsDisplayed()
@@ -19,7 +19,7 @@ class WorkersControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/workers');
 
-        $this->assertSelectorExists('form input[id=default-search]');
+        $this->assertSelectorExists('form input[id=default-search]', 'The search form is not displayed');
     }
 
     public function testTurboFrameInIndex()
@@ -27,7 +27,7 @@ class WorkersControllerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/workers');
 
-        $this->assertSelectorExists('turbo-frame[id=teacher-details]');
+        $this->assertSelectorExists('turbo-frame[id=teacher-details]', 'The turbo-frame is not displayed');
     }
 
     public function testFormSubmit()
@@ -40,6 +40,6 @@ class WorkersControllerTest extends WebTestCase
 
         $crawler = $client->submit($form);
 
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful('The response was not successful');
     }
 }

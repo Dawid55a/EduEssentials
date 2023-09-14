@@ -22,7 +22,7 @@ class AddGradeFormTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
+        $this->assertTrue($form->isSynchronized(), 'The form is not synchronized');
     }
 
     public function testSubmitValidData()
@@ -37,13 +37,13 @@ class AddGradeFormTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
-        $this->assertEquals($model->getGrade(), $formData['grade']);
+        $this->assertTrue($form->isSynchronized(), 'The form is not synchronized');
+        $this->assertEquals($model->getGrade(), $formData['grade'], 'The grade is not the same');
 
         $view = $form->createView();
         $children = $view->children;
         foreach (array_keys($formData) as $key) {
-            $this->assertArrayHasKey($key, $children);
+            $this->assertArrayHasKey($key, $children, 'The form does not have the key ' . $key);
         }
     }
 
@@ -60,8 +60,8 @@ class AddGradeFormTypeTest extends TypeTestCase
         $form->submit($formData);
 
         $errors = $form->getErrors(true, true);
-        $this->assertTrue($form->isSynchronized());
-        $this->assertEquals('Grade must be between 1 and 6', $errors->current()->getMessage());
+        $this->assertTrue($form->isSynchronized(), 'The form is not synchronized');
+        $this->assertEquals('Grade must be between 1 and 6', $errors->current()->getMessage(), 'The error message is not the expected one');
     }
 
     protected function getExtensions()
