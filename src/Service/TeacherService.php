@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use AllowDynamicProperties;
+use App\DTO\TeacherDTO;
+use App\DTO\TeachersBySubjectDTO;
 use App\Entity\Teacher;
 use App\Repository\CourseSubjectRepository;
 use App\Repository\GradeRepository;
@@ -47,20 +49,35 @@ class TeacherService
         }
     }
 
+    /**
+     * @param array $teachers
+     * @return Array<int, TeachersBySubjectDTO>
+     */
     public function getTeachersGroupedBySubjects(array $teachers): array
     {
         $extTeachers = $this->courseSubjectRepository->findTeachersGroupedBySubjectsByIds($teachers);
 
-        $teachersGroupedBySubjects = [];
+        /** @var TeachersBySubjectDTO[] $teachersGroupedBySubjectsDTOs */
+        $teachersGroupedBySubjectsDTOs = [];
         foreach ($extTeachers as $extTeacher) {
-            if (!isset($teachersGroupedBySubjects[$extTeacher->getSubject()->getName()])) {
-                $teachersGroupedBySubjects[$extTeacher->getSubject()->getName()] = [];
+            $subjectName = $extTeacher->getSubject()->getName();
+            if (!isset($teachersGroupedBySubjectsDTOs[$subjectName])) {
+                $teachersGroupedBySubjectsDTOs[$subjectName] = TeachersBySubjectDTO::create([
+                    'subjectName' => $subjectName,
+                    'teachers' => []
+                ]);
             }
-            $teachersGroupedBySubjects[$extTeacher->getSubject()->getName()][] = $extTeacher->getTeacher();
+            $teacherDTO = TeacherDTO::create([
+                'id' => $extTeacher->getTeacher()->getId(),
+                'firstName' => $extTeacher->getTeacher()->getAuthUser()->getFirstName(),
+                'lastName' => $extTeacher->getTeacher()->getAuthUser()->getLastName()
+            ]);
+            $teachersGroupedBySubjectsDTOs[$subjectName]->teachers[] = $teacherDTO;
         }
-        ksort($teachersGroupedBySubjects);
-        return $teachersGroupedBySubjects;
+        ksort($teachersGroupedBySubjectsDTOs);
+        return array_values($teachersGroupedBySubjectsDTOs);
     }
+
 
     /**
      * @param int $id

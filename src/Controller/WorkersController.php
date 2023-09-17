@@ -7,6 +7,7 @@ use App\Form\TeacherFindFormType;
 use App\Service\TeacherService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WorkersController extends BaseController
@@ -20,28 +21,28 @@ class WorkersController extends BaseController
 
     #[Route('/workers', name: 'app_workers')]
     public function index(
-        Request $request,
+        Request                                $request,
+        #[MapQueryParameter('teacher')] string $teacher = ''
     ): Response
     {
         $form = $this->createForm(TeacherFindFormType::class);
+        $form->get('teacher')->setData($teacher);
         $form->handleRequest($request);
+        $search = $teacher;
         if ($form->isSubmitted() && $form->isValid()) {
-
             $data = $form->getData();
-            $search = $data['teacher'];
-            if (empty($search)) {
-                $search = '';
-            }
-            $teachers = $this->teacherService->searchTeachers($search);
-            $teachersBySubject = $this->teacherService->getTeachersGroupedBySubjects($teachers);
+            $search = $data['teacher'] ?? '';
         }
 
+        $teachers = $this->teacherService->searchTeachers($search);
+        $teachersBySubject = $this->teacherService->getTeachersGroupedBySubjects($teachers);
         return $this->render('workers/index.html.twig', [
             'controller_name' => 'WorkersController',
             'search_form' => $form->createView(),
-            'teachersBySubject' => $teachersBySubject ?? null,
+            'teachersBySubject' => $teachersBySubject,
         ]);
     }
+
 
     #[Route('/workers/teacher-details/{id}', name: 'teacher_details')]
     public function teacherDetails(int $id, Request $request): Response
